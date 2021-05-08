@@ -1,0 +1,205 @@
+<!------------------->
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>nat3awno</title>
+        <meta name="viewport" content="width=device-width">
+		<link rel="icon" type="image/png" href="favicon.png" />
+        <!-- working with sass -> scss -->
+        <link rel="stylesheet" href="css/style.css">
+		<link href="http://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/modernizr/2.6.2/modernizr.min.js"></script>
+    </head>
+    <body>
+        <header class="header">
+            <div class="container">
+                <nav class="row">
+                    <ul class="col12">
+
+                        <li><a href="index.html"><i class="fa fa-home"></i> الرئسية </a></li>
+                        <li><a href="index.html"><i class="fa fa-cogs"></i> من نحن </a></li>
+                        <li><a href="index.html"> ملاحظة مهمة </a></li>
+                        <li><a href="index.html#contact"><i class="fa fa-envelope"></i> اتصل بنا </a></li>
+                        <li><a href="donation.html"><i class="fas fa-donate"></i> التبرع </a></li>
+                        <li><a href="Benefit form-1.html"> الإستفادة </a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header> <!-- End header  -->
+        <section id="home" class="item">
+            <div class="container">
+                
+                <div id="smart-button-container">
+                    <div style="text-align: center;">
+                      <div style="margin-bottom: 1.25rem;">
+                        <p></p>
+                        <select id="item-options"><option value=" دولار أمريكي" price="1"> دولار أمريكي - 1 USD</option><option value=" دولار أمريكي" price="5"> دولار أمريكي - 5 USD</option><option value="دولارات أمريكية" price="10">دولارات أمريكية - 10 USD</option><option value="دولار أمريكي" price="50">دولار أمريكي - 50 USD</option><option value="دولار أمريكي" price="100">دولار أمريكي - 100 USD</option></select>
+                        <select style="visibility: hidden" id="quantitySelect"></select>
+                      </div>
+                    <div id="paypal-button-container"></div>
+                    </div>
+                  </div>
+                  <script src="https://www.paypal.com/sdk/js?client-id=Ad-1PanTOG8Xq3CtK_aOJ8mvGFKTqs6dEso49jHN1LAiLbhUTVSO7NpCD1yBHnWvWInW_Nl1ZJdW61az" data-sdk-integration-source="button-factory"></script>
+                  <script>
+                    function initPayPalButton() {
+                      var shipping = 0;
+                      var itemOptions = document.querySelector("#smart-button-container #item-options");
+                  var quantity = parseInt();
+                  var quantitySelect = document.querySelector("#smart-button-container #quantitySelect");
+                  if (!isNaN(quantity)) {
+                    quantitySelect.style.visibility = "visible";
+                  }
+                  var orderDescription = '';
+                  if(orderDescription === '') {
+                    orderDescription = 'Item';
+                  }
+                  paypal.Buttons({
+                    style: {
+                      shape: 'rect',
+                      color: 'gold',
+                      layout: 'vertical',
+                      label: 'paypal',
+                      
+                    },
+                    createOrder: function(data, actions) {
+                      var selectedItemDescription = itemOptions.options[itemOptions.selectedIndex].value;
+                      var selectedItemPrice = parseFloat(itemOptions.options[itemOptions.selectedIndex].getAttribute("price"));
+                      var tax = (0 === 0) ? 0 : (selectedItemPrice * (parseFloat(0)/100));
+                      if(quantitySelect.options.length > 0) {
+                        quantity = parseInt(quantitySelect.options[quantitySelect.selectedIndex].value);
+                      } else {
+                        quantity = 1;
+                      }
+              
+                      tax *= quantity;
+                      tax = Math.round(tax * 100) / 100;
+                      var priceTotal = quantity * selectedItemPrice + parseFloat(shipping) + tax;
+                      priceTotal = Math.round(priceTotal * 100) / 100;
+                      var itemTotalValue = Math.round((selectedItemPrice * quantity) * 100) / 100;
+              
+                      return actions.order.create({
+                        purchase_units: [{
+                          description: orderDescription,
+                          amount: {
+                            currency_code: 'USD',
+                            value: priceTotal,
+                            breakdown: {
+                              item_total: {
+                                currency_code: 'USD',
+                                value: itemTotalValue,
+                              },
+                              shipping: {
+                                currency_code: 'USD',
+                                value: shipping,
+                              },
+                              tax_total: {
+                                currency_code: 'USD',
+                                value: tax,
+                              }
+                            }
+                          },
+                          items: [{
+                            name: selectedItemDescription,
+                            unit_amount: {
+                              currency_code: 'USD',
+                              value: selectedItemPrice,
+                            },
+                            quantity: quantity
+                          }]
+                        }]
+                      });
+                    },
+                    onApprove: function(data, actions) {
+                      return actions.order.capture().then(function(details) {
+                        alert('Transaction completed by ' + details.payer.name.given_name + '!');
+                      });
+                    },
+                    onError: function(err) {
+                      console.log(err);
+                    },
+                  }).render('#paypal-button-container');
+                }
+                initPayPalButton();
+                  </script>
+  
+            </div> <!-- End container -->
+        </section> <!-- End section item -->
+
+        
+  <!-- Site footer -->
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-12 col-md-6">
+          <h6>من نحن</h6>
+          <p class="text-justify">نتعاونو هي منصة غير ربحية تحاول مساعدة المحتاجين عن طريق تبرعاتكم المالية عبر المنصة </p>
+        </div>
+
+        <div class="col-xs-6 col-md-3">
+          <h6>المشرفون على الموقع</h6>
+          <ul class="footer-links">
+            <li><a href="https://www.instagram.com/shakes.pearee/" target="_blank">shakespeare</a></li>
+            <li><a href="https://www.instagram.com/helly_phoenix/" target="_blank">phoenix</a></li>
+          </ul>
+        </div>
+
+          <ul class="footer-logo">
+            <img src="nt3awno logo.png" alt="">
+          </ul>
+      <hr>
+    </div>
+    <div class="container">
+        <div class="row">
+          <div class="col-md-8 col-sm-6 col-xs-12">
+            <p class="copyright-text">حقوق النشر © 2021 جميع الحقوق محفوظة بواسطة 
+         <a href="index.html">نتعاونو</a>.
+            </p>
+          </div>
+
+        <div class="col-md-4 col-sm-6 col-xs-12">
+          <ul class="social-icons">
+            <li><a class="facebook" href="#" target="_blank"><i class="fa fa-facebook"></i></a></li>
+            <li><a class="instagram" href="https://www.instagram.com/nt3awn_o/" target="_blank"><i class="fa fa-instagram"></i></a></li>  
+          </ul>
+        </div>
+      </div>
+    </div>
+</footer>
+
+
+ 				                            
+
+		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <script src="js/script.js"></script>
+        <button onclick="topFunction()" id="myBtn" title="Go to top">عودة للأعلى</button>
+
+
+<script>
+//Get the button
+var mybutton = document.getElementById("myBtn");
+
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    mybutton.style.display = "block";
+  } else {
+    mybutton.style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+</script>
+    </body>
+</html>
